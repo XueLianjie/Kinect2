@@ -187,7 +187,7 @@ void GenObstacleMap(VISION_DATA &cdata)
 
 VELODYNE::VELODYNE()
 {
-    cout<<"a"<<endl;
+    ;
 }
 
 VELODYNE::~VELODYNE()
@@ -216,7 +216,7 @@ private:
 
 VELODYNE_BASE::VELODYNE_BASE():mVelodyneStruct(new VELODYNE_BASE::VELODYNE_BASE_STRUCT)
 {
-    cout<<"a"<<endl;
+    ;
 }
 
 void VELODYNE_BASE::VELODYNE_BASE_STRUCT::Init()
@@ -240,7 +240,7 @@ void VELODYNE_BASE::VELODYNE_BASE_STRUCT::cloud_callback(const CloudConstPtr& cl
 
 void VELODYNE_BASE::init()
 {
-     mVelodyneStruct->Init();
+    mVelodyneStruct->Init();
 }
 
 VELODYNE_BASE::~VELODYNE_BASE()

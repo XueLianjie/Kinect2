@@ -111,7 +111,7 @@ include_directories(${ALL_INCL_DIR})
 link_directories(${ALL_LINK_DIR})
 
 ################################### build server ####################################
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp TestVelodyne.cpp)
 PREPEND(FULL_SRC Server ${SOURCE_FILES})
 
 set(VISION_SOURCE_FILES Aris_Vision.cpp )

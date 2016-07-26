@@ -11,7 +11,7 @@ using namespace std;
 #include <aris.h>
 #include <Robot_Gait.h>
 #include <Robot_Type_I.h>
-#include "Aris_Vision.h"
+#include "TestVelodyne.h"
 
 #include "rtdk.h"
 #include "unistd.h"
@@ -22,7 +22,9 @@ int main(int argc, char *argv[])
 {
 
     cout<<"1"<<endl;
-    aris::sensor::VELODYNE velodyne1;
+
+    Testvelodyne::TestVelodyneWrapper::VelodyneStart();
+
 //    velodyne1.start();
 
 //    for (int i = 0; i < 5; ++i)
