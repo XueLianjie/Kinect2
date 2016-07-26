@@ -1,0 +1,44 @@
+# C++:
+*.slo
+*.lo
+*.o
+*.obj
+
+# local:
+log*.botlog
+log*.txt
+
+*.config*
+*.creator*
+*.user*
+*.files*
+*.includes*
+
+
+*.config
+*.creator
+*.user
+*.files
+*.includes
+
+<<<<<<< HEAD
+=======
+build
+CMaKeFiles
+CMakeFiles
+bin
+PointCloud
+CMakeCache.txt*
+Makefile*
+cmake_install.cmake*
+
+CMakeCache*
+
+
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+CMakeCache
+
+.*~
