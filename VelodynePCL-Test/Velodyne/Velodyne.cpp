@@ -12,6 +12,8 @@ typedef typename Cloud::ConstPtr CloudConstPtr;
 
 void GenPointCoud(const CloudConstPtr &rawCloud, CloudPtr &adjCloud)
 {
+    cout<<"Poin: "<<rawCloud->points.front().x<<" "<<rawCloud->points.front().y<<" "<< rawCloud->points.front().z<<endl;
+
     Eigen::Matrix4f matrixSTS;
     matrixSTS << -1, 0, 0, 0,
             0, -1, 0, 0,
@@ -97,11 +99,18 @@ VELODYNE::~VELODYNE()
 void VELODYNE::Start()
 {
     mVelodyneStruct->Init();
+    cout<<"Device Open ! "<<endl;
+    for (int i = 0; i < 3; i++)
+    {
+        Update();
+    }
+    cout<<"Clear !"<<endl;
 }
 
 void VELODYNE::Stop()
 {
     mVelodyneStruct->Release();
+    cout<<"Device Close ! "<<endl;
 }
 
 void VELODYNE::Update()
@@ -119,7 +128,7 @@ void VELODYNE::Update()
         if(rawCloud)
         {
             memset(&visData, 0, sizeof(visData));
-            CloudPtr adjCloud;
+            CloudPtr adjCloud(new Cloud);
             GenPointCoud(rawCloud, adjCloud);
             GenGridMap(adjCloud, visData);
             GenObstacleMap(visData);

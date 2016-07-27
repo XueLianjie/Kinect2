@@ -3,7 +3,9 @@
 
 #include <stdlib.h>
 #include <memory>
+#include <iostream>
 
+using namespace std;
 
 namespace VelodyneSensor
 {
