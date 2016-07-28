@@ -25,6 +25,7 @@ public:
 
     void Start();
     void Update();
+    void SavePcd();
     void Stop();
     VISION_DATA visData;
 private:

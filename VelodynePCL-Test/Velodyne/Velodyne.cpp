@@ -1,6 +1,7 @@
 #include "Velodyne.h"
 #include "pcl/io/vlp_grabber.h"
 #include "pcl/common/transforms.h"
+#include "pcl/io/pcd_io.h"
 
 using namespace pcl;
 
@@ -84,6 +85,7 @@ private:
     CloudConstPtr cloud_;
     boost::signals2::connection cloud_connection;
     void cloud_callback(const CloudConstPtr& cloud);
+    int frameNum = 0;
 };
 
 VELODYNE::VELODYNE():mVelodyneStruct(new VELODYNE::VELODYNE_STRUCT)
@@ -111,6 +113,31 @@ void VELODYNE::Stop()
 {
     mVelodyneStruct->Release();
     cout<<"Device Close ! "<<endl;
+}
+
+void VELODYNE::SavePcd()
+{
+    while(true)
+    {
+        CloudConstPtr rawCloud;
+
+        if(mVelodyneStruct->cloud_mutex_.try_lock())
+        {
+            mVelodyneStruct->cloud_.swap(rawCloud);
+            mVelodyneStruct->cloud_mutex_.unlock();
+        }
+
+        if(rawCloud)
+        {
+            Cloud tempCloud = *rawCloud;
+            std::stringstream out;
+            out<< mVelodyneStruct->frameNum;
+            std::string fileName = "cloud" + out.str() +".pcd";
+            pcl::io::savePCDFileASCII(fileName, tempCloud);
+            mVelodyneStruct->frameNum++;
+        }
+    }
+
 }
 
 void VELODYNE::Update()
@@ -155,7 +182,6 @@ void VELODYNE::VELODYNE_STRUCT::Release()
     this->grabber.stop();
     this->cloud_connection.disconnect();
 }
-
 
 }
 
