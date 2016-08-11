@@ -17,8 +17,8 @@ void GenPointCoud(const CloudConstPtr &rawCloud, CloudPtr &adjCloud)
 
     Eigen::Matrix4f matrixSTS;
     matrixSTS << -1, 0, 0, 0,
-            0, -1, 0, 0,
             0, 0, 1, 0,
+            0, 1, 0, 0,
             0, 0, 0, 1;
 
     Eigen::Matrix4f matrixSTR;
