@@ -101,7 +101,8 @@ KINECT2::KINECT2():mKinect2Struct(new KINECT2::KINECT2_STRUCT)
 
 KINECT2::~KINECT2()
 {
-    ;
+    mKinect2Struct->dev->stop();
+    mKinect2Struct->dev->close();
 }
 
 void KINECT2::Start()
@@ -198,7 +199,7 @@ void KINECT2::KINECT2_STRUCT::Initialize()
     }
     else
     {
-       serial = freenect2.getDefaultDeviceSerialNumber();
+        serial = freenect2.getDefaultDeviceSerialNumber();
     }
 
     pipeline = new libfreenect2::CpuPacketPipeline();

@@ -1,7 +1,5 @@
-Aris_Vision
-Velodyne
+Kinect2
 .
-/usr/include/ni
 /usr/
 
 /usr/aris/include
@@ -10,3 +8,4 @@ Velodyne
 /usr/Robots/include
 /usr/include/eigen3
 /usr/local/include/pcl-1.8
+/usr/local/include/libfreenect2
