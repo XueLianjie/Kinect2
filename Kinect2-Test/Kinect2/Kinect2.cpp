@@ -24,9 +24,9 @@ void GenPointCoud(const CloudPtr &rawCloud, CloudPtr &adjCloud)
             0, 0, 0, 1;
 
     Eigen::Matrix4f matrixSTR;
-    matrixSTR <<  0.9995, 0.0286, 0.0159, -0.0436,
-            -0.0043, 0.5949, -0.8038, 0.3988,
-            -0.0324, 0.8033, 0.5947, 0.5142,
+    matrixSTR <<  0.9995, 0.0286, 0.0159, -0.0437,
+            -0.0043, 0.5949, -0.8038, 0.3875,
+            -0.0324, 0.8033, 0.5947, 0.5138,
             0, 0, 0, 1;
 
     Eigen::Matrix4f matrixRTG;
