@@ -18,15 +18,15 @@ void GenPointCoud(const CloudPtr &rawCloud, CloudPtr &adjCloud)
     cout<<"Point: "<<rawCloud->points.front().x<<" "<<rawCloud->points.front().y<<" "<< rawCloud->points.front().z<<endl;
 
     Eigen::Matrix4f matrixSTS;
-    matrixSTS << 1, 0, 0, 0,
-            0, 1, 0, 0,
+    matrixSTS << -1, 0, 0, 0,
+            0, -1, 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1;
 
     Eigen::Matrix4f matrixSTR;
-    matrixSTR <<  0.9995, 0.0134, -0.0273, 0.0224,
-            -0.0304, 0.5120, -0.8584, 0.2026 + 0.038,
-            0.0025, 0.8589, 0.5122, 0.5733,
+    matrixSTR <<  0.9995, 0.0286, 0.0159, -0.0436,
+            -0.0043, 0.5949, -0.8038, 0.3988,
+            -0.0324, 0.8033, 0.5947, 0.5142,
             0, 0, 0, 1;
 
     Eigen::Matrix4f matrixRTG;
@@ -108,6 +108,7 @@ KINECT2::~KINECT2()
 void KINECT2::Start()
 {
     mKinect2Struct->Initialize();
+    SavePcd();
 }
 
 void KINECT2::Stop()
