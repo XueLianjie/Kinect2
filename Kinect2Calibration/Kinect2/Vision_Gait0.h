@@ -32,7 +32,7 @@ struct VISION_WALK_PARAM
 struct VISION_CALIBRATION_PARAM final:public aris::server::GaitParamBase
 {
     //int count=0;
-    int gaitLength=2000;// from zero to the targeting posture
+    int gaitLength=2500;// from zero to the targeting posture
     //int totalCount=N_CALIBRATION*3000;
     int localCount=0;
     int postureNum=N_CALIBRATION;
