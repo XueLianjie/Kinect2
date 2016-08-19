@@ -121,6 +121,25 @@ void KINECT2::Stop()
     mKinect2Struct->dev->close();
 }
 
+void KINECT2::SaveMap()
+{
+    std::stringstream out;
+    out<<mKinect2Struct->frameNum;
+    std::string filename = "GridMap" + out.str() + ".txt";
+    std::ofstream Gridmapfile(filename);
+    if (Gridmapfile.is_open())
+    {
+        for(int i = 0; i < 400; i++)
+        {
+            for(int j = 0; j < 400; j++)
+            {
+                Gridmapfile<<visData.gridMap[i][j]<<" ";
+            }
+            Gridmapfile<<std::endl;
+        }
+    }
+}
+
 void KINECT2::GetPose(const float nowPose[16])
 {
     memcpy(mKinect2Struct->robPose, nowPose, sizeof(nowPose));
@@ -202,7 +221,6 @@ void KINECT2::UpdateConMap()
             mKinect2Struct->robPose[12], mKinect2Struct->robPose[13], mKinect2Struct->robPose[14], mKinect2Struct->robPose[15];
 
     Eigen::Matrix4f invPosMatrix = posMatrix.inverse();
-
 
     for(int i = 0; i < 400; i++)
     {

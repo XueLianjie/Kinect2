@@ -30,6 +30,7 @@ public:
     void SavePcd();
     void Stop();
     void GetPose(const float nowPose[16]);
+    void SaveMap();
     VISION_DATA visData;
 private:
    void Update();

@@ -41,7 +41,6 @@ struct VISION_CALIBRATION_PARAM final:public aris::server::GaitParamBase
     double postureLib[6*N_CALIBRATION];
 };
 
-
 int RobotVisionWalk(Robots::RobotBase &robot, const VISION_WALK_PARAM &param);
 
 void RobotBody(Robots::RobotBase &robot, const VISION_WALK_PARAM &pParam);

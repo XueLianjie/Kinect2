@@ -20,14 +20,13 @@ using namespace std;
 
 using namespace aris::core;
 
-
 double feetPosi[18] =
-{ -0.3,  -0.85, -0.65,
-  -0.45, -0.85,  0,
-  -0.3,  -0.85,  0.65,
-  0.3,  -0.85, -0.65,
-  0.45, -0.85,  0,
-  0.3,   -0.85,  0.65 };
+{ -0.3,  -0.9, -0.65,
+  -0.45, -0.9,  0,
+  -0.3,  -0.9,  0.65,
+  0.3,  -0.9, -0.65,
+  0.45, -0.9,  0,
+  0.3,   -0.9,  0.65 };
 
 Kinect2Sensor::KINECT2 kinect2;
 
@@ -131,7 +130,6 @@ auto visionCalibrateParse(const std::string &cmd, const std::map<std::string, st
     msg_out.copyStruct(param);
 }
 
-
 auto visionCalibrate(aris::dynamic::Model &model, const aris::dynamic::PlanParamBase & cali_param)->int
 {
     auto &robot=static_cast<Robots::RobotBase &>(model);
@@ -213,15 +211,15 @@ auto visionCalibrate(aris::dynamic::Model &model, const aris::dynamic::PlanParam
             rt_printf("calibration posture finished going back %d\n",postureCount);
         }
         s=PI*(localCount+1)/pSP.gaitLength;// (0,pi]
-//        currentPeb[3]=targetPosture[2]*M_PI/180.0*(1+cos(s))/2;
-//        currentPeb[4]=targetPosture[1]*M_PI/180.0*(1+cos(s))/2;
-//        currentPeb[5]=targetPosture[0]*M_PI/180.0*(1+cos(s))/2;
-//        currentPeb[0]=targetPosture[3]*(1+cos(s))/2;
-//        currentPeb[1]=targetPosture[4]*(1+cos(s))/2;
-//        currentPeb[2]=targetPosture[5]*(1+cos(s))/2;
+        //        currentPeb[3]=targetPosture[2]*M_PI/180.0*(1+cos(s))/2;
+        //        currentPeb[4]=targetPosture[1]*M_PI/180.0*(1+cos(s))/2;
+        //        currentPeb[5]=targetPosture[0]*M_PI/180.0*(1+cos(s))/2;
+        //        currentPeb[0]=targetPosture[3]*(1+cos(s))/2;
+        //        currentPeb[1]=targetPosture[4]*(1+cos(s))/2;
+        //        currentPeb[2]=targetPosture[5]*(1+cos(s))/2;
 
 
-//        robot.SetPeb(currentPeb,beginMak,"132");
+        //        robot.SetPeb(currentPeb,beginMak,"132");
 
         currentPeb[2]=targetPosture[2]*M_PI/180.0*(1+cos(s))/2;
         currentPeb[1]=targetPosture[1]*M_PI/180.0*(1+cos(s))/2;
@@ -253,6 +251,178 @@ auto visionCalibrate(aris::dynamic::Model &model, const aris::dynamic::PlanParam
 
     return 1;
 
+}
+
+VISION_WALK_PARAM visionWalkParam[7];
+
+float robPose[7][16] = {0};
+
+aris::control::Pipe<int> visionWalkPipe(true);
+
+atomic_bool isMapRecorded(false);
+
+atomic_int stepNum{0};
+
+static auto visionWalkThread = std::thread([]()
+{
+    while(true)
+    {
+        int postureCount;
+        visionWalkPipe.recvInNrt(postureCount);
+
+        if(stepNum == 0)
+        {
+            kinect2.InitMap();
+            kinect2.SaveMap();
+        }
+        else
+        {
+            kinect2.GetPose(robPose[stepNum - 1]);
+            kinect2.UpdateConMap();
+            kinect2.SaveMap();
+        }
+
+        cout<<" map recorded"<<endl;
+        isMapRecorded = true;
+    }
+});
+
+
+auto visionWalkParse(const std::string &cmd, const std::map<std::string, std::string> &params, aris::core::Msg &msg_out)->void
+{
+    visionWalkParam[0].movetype = flatmove;
+    double avoidMove0[3] = {0, 0, 0.8};
+    memcpy(visionWalkParam[0].movedata, avoidMove0, 3*sizeof(double));
+    visionWalkParam[0].totalCount = 3000;
+
+    robPose[0][0] = 1;
+    robPose[0][5] = 1;
+    robPose[0][10] = 1;
+    robPose[0][11] = 0.4;
+
+    visionWalkParam[1].movetype = turn;
+    visionWalkParam[1].turndata = -30;
+    visionWalkParam[1].totalCount = 3000;
+
+    robPose[1][5] = 1;
+    robPose[1][0] = cos(M_PI * (-15) / 180.0);
+    robPose[1][2] = sin(M_PI * (-15) / 180.0);
+    robPose[1][8] = -sin(M_PI * (-15) / 180.0);
+    robPose[1][10] = cos(M_PI * (-15) / 180.0);
+
+    visionWalkParam[2].movetype = flatmove;
+    double avoidMove1[3] = {0, 0, 0.8};
+    memcpy(visionWalkParam[2].movedata, avoidMove1, 3*sizeof(double));
+    visionWalkParam[2].totalCount = 3000;
+
+    robPose[2][0] = 1;
+    robPose[2][5] = 1;
+    robPose[2][10] = 1;
+    robPose[2][11] = 0.4;
+
+    visionWalkParam[3].movetype = turn;
+    visionWalkParam[3].turndata = 60;
+    visionWalkParam[3].totalCount = 5000;
+
+    robPose[3][5] = 1;
+    robPose[3][0] = cos(M_PI * (30) / 180.0);
+    robPose[3][2] = sin(M_PI * (30) / 180.0);
+    robPose[3][8] = -sin(M_PI * (30) / 180.0);
+    robPose[3][10] = cos(M_PI * (30) / 180.0);
+
+    visionWalkParam[4].movetype = flatmove;
+    double avoidMove2[3] = {0, 0, 0.8};
+    memcpy(visionWalkParam[4].movedata, avoidMove2, 3*sizeof(double));
+    visionWalkParam[4].totalCount = 3000;
+
+    robPose[4][0] = 1;
+    robPose[4][5] = 1;
+    robPose[4][10] = 1;
+    robPose[4][11] = 0.4;
+
+
+    visionWalkParam[5].movetype = turn;
+    visionWalkParam[5].turndata = -30;
+    visionWalkParam[5].totalCount = 3000;
+
+    robPose[5][5] = 1;
+    robPose[5][0] = cos(M_PI * (-15) / 180.0);
+    robPose[5][2] = sin(M_PI * (-15) / 180.0);
+    robPose[5][8] = -sin(M_PI * (-15) / 180.0);
+    robPose[5][10] = cos(M_PI * (-15) / 180.0);
+
+    visionWalkParam[6].movetype = flatmove;
+    double avoidMove3[3] = {0, 0, 0.8};
+    memcpy(visionWalkParam[6].movedata, avoidMove3, 3*sizeof(double));
+    visionWalkParam[6].totalCount = 3000;
+
+    robPose[6][0] = 1;
+    robPose[6][5] = 1;
+    robPose[6][10] = 1;
+    robPose[6][11] = 0.4;
+
+    aris::server::GaitParamBase param;
+    msg_out.copyStruct(param);
+}
+
+auto visionWalk(aris::dynamic::Model &model, const aris::dynamic::PlanParamBase & plan_param)->int
+{
+    static bool isFirstTime = true;
+
+    if (isMapRecorded)
+    {
+        if(isFirstTime)
+        {
+            visionWalkParam[stepNum].count = 0;
+            isFirstTime = false;
+        }
+
+        auto &robot = static_cast<Robots::RobotBase &>(model);
+
+        int remainCount = RobotVisionWalk(robot, visionWalkParam[stepNum]);
+        visionWalkParam[stepNum].count++;
+
+        if(remainCount == 0 && isStop == true)
+        {
+            isStop = false;
+            isFirstTime = true;
+            return 0;
+        }
+
+        if(remainCount == 0 && stepNum > 6)
+        {
+            isStop = false;
+            isFirstTime = true;
+            return 0;
+        }
+
+        if(remainCount == 0 && isStop == false)
+        {
+            stepNum++;
+            isFirstTime = true;
+            isSending = false;
+            isMapRecorded = false;
+            return -1;
+        }
+    }
+    else
+    {
+        if(isSending)
+        {
+            return -1;
+        }
+        else
+        {
+            visionWalkPipe.sendToNrt(6);
+            isSending = true;
+            return -1;
+        }
+    }
+}
+
+auto stopVisionWalkParse(const std::string &cmd, const std::map<std::string, std::string> &params, aris::core::Msg &msg_out)->void
+{
+    isStop = true;
 }
 
 int main(int argc, char *argv[])
@@ -293,6 +463,8 @@ int main(int argc, char *argv[])
     rs.addCmd("wk", Robots::walkParse, Robots::walkGait);
     rs.addCmd("ro", Robots::resetOriginParse, Robots::resetOriginGait);
     rs.addCmd("ca", visionCalibrateParse, visionCalibrate);
+    rs.addCmd("vwk", visionWalkParse, visionWalk);
+    rs.addCmd("swk", stopVisionWalkParse, visionWalk);
 
     rs.open();
 
