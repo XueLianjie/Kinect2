@@ -532,6 +532,8 @@
                     <beta abbreviation="b" type="double" default="0"/>
                 </wk_param>
             </wk>
+            <vwk/>
+            <swk/>
             <ca/>
             <ro/>
         </Commands>

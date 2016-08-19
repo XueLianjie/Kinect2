@@ -47,7 +47,6 @@ atomic_bool isStop(false);
 
 aris::control::Pipe<int> visionCalibratePipe(true);
 
-
 void TransM(double matrixIn[6], double matrixOut[6])
 {
     double	alpha = matrixIn[0];
@@ -274,12 +273,14 @@ static auto visionWalkThread = std::thread([]()
         {
             kinect2.InitMap();
             kinect2.SaveMap();
+            cout<<"map Init"<<endl;
         }
         else
         {
             kinect2.GetPose(robPose[stepNum - 1]);
             kinect2.UpdateConMap();
             kinect2.SaveMap();
+            cout<<"map update"<<endl;
         }
 
         cout<<" map recorded"<<endl;
@@ -291,14 +292,14 @@ static auto visionWalkThread = std::thread([]()
 auto visionWalkParse(const std::string &cmd, const std::map<std::string, std::string> &params, aris::core::Msg &msg_out)->void
 {
     visionWalkParam[0].movetype = flatmove;
-    double avoidMove0[3] = {0, 0, 0.8};
+    double avoidMove0[3] = {0, 0, 0.4};
     memcpy(visionWalkParam[0].movedata, avoidMove0, 3*sizeof(double));
     visionWalkParam[0].totalCount = 3000;
 
     robPose[0][0] = 1;
     robPose[0][5] = 1;
     robPose[0][10] = 1;
-    robPose[0][11] = 0.4;
+    robPose[0][11] = 0.2;
 
     visionWalkParam[1].movetype = turn;
     visionWalkParam[1].turndata = -30;
@@ -311,14 +312,14 @@ auto visionWalkParse(const std::string &cmd, const std::map<std::string, std::st
     robPose[1][10] = cos(M_PI * (-15) / 180.0);
 
     visionWalkParam[2].movetype = flatmove;
-    double avoidMove1[3] = {0, 0, 0.8};
+    double avoidMove1[3] = {0, 0, 0.4};
     memcpy(visionWalkParam[2].movedata, avoidMove1, 3*sizeof(double));
     visionWalkParam[2].totalCount = 3000;
 
     robPose[2][0] = 1;
     robPose[2][5] = 1;
     robPose[2][10] = 1;
-    robPose[2][11] = 0.4;
+    robPose[2][11] = 0.2;
 
     visionWalkParam[3].movetype = turn;
     visionWalkParam[3].turndata = 60;
@@ -331,14 +332,14 @@ auto visionWalkParse(const std::string &cmd, const std::map<std::string, std::st
     robPose[3][10] = cos(M_PI * (30) / 180.0);
 
     visionWalkParam[4].movetype = flatmove;
-    double avoidMove2[3] = {0, 0, 0.8};
+    double avoidMove2[3] = {0, 0, 0.4};
     memcpy(visionWalkParam[4].movedata, avoidMove2, 3*sizeof(double));
     visionWalkParam[4].totalCount = 3000;
 
     robPose[4][0] = 1;
     robPose[4][5] = 1;
     robPose[4][10] = 1;
-    robPose[4][11] = 0.4;
+    robPose[4][11] = 0.2;
 
 
     visionWalkParam[5].movetype = turn;
@@ -352,14 +353,14 @@ auto visionWalkParse(const std::string &cmd, const std::map<std::string, std::st
     robPose[5][10] = cos(M_PI * (-15) / 180.0);
 
     visionWalkParam[6].movetype = flatmove;
-    double avoidMove3[3] = {0, 0, 0.8};
+    double avoidMove3[3] = {0, 0, 0.4};
     memcpy(visionWalkParam[6].movedata, avoidMove3, 3*sizeof(double));
     visionWalkParam[6].totalCount = 3000;
 
     robPose[6][0] = 1;
     robPose[6][5] = 1;
     robPose[6][10] = 1;
-    robPose[6][11] = 0.4;
+    robPose[6][11] = 0.2;
 
     aris::server::GaitParamBase param;
     msg_out.copyStruct(param);
@@ -371,6 +372,11 @@ auto visionWalk(aris::dynamic::Model &model, const aris::dynamic::PlanParamBase 
 
     if (isMapRecorded)
     {
+        if(stepNum == 7)
+        {
+            return 0;
+        }
+
         if(isFirstTime)
         {
             visionWalkParam[stepNum].count = 0;
@@ -383,13 +389,6 @@ auto visionWalk(aris::dynamic::Model &model, const aris::dynamic::PlanParamBase 
         visionWalkParam[stepNum].count++;
 
         if(remainCount == 0 && isStop == true)
-        {
-            isStop = false;
-            isFirstTime = true;
-            return 0;
-        }
-
-        if(remainCount == 0 && stepNum > 6)
         {
             isStop = false;
             isFirstTime = true;
@@ -435,7 +434,7 @@ int main(int argc, char *argv[])
     {
         std::cout << "you did not type in robot name, in this case ROBOT-III will start" << std::endl;
         //xml_address = "/usr/Robots/resource/Robot_Type_I/Robot_III/Robot_III.xml";
-        xml_address = "/home/hex/Kinect2/Kinect2Calibration/Robot_VIII.xml";
+        xml_address = "/home/hex/Kinect2/Robot_VIII.xml";
     }
     else if (std::string(argv[1]) == "III")
     {
@@ -445,7 +444,7 @@ int main(int argc, char *argv[])
     else if (std::string(argv[1]) == "VIII")
     {
         //xml_address = "/usr/Robots/resource/Robot_Type_I/Robot_VIII/Robot_VIII.xml";
-        xml_address = "/home/hex/Kinect2/Kinect2Calibration/Robot_VIII.xml";
+        xml_address = "/home/hex/Kinect2/Robot_VIII.xml";
     }
     else
     {

@@ -80,6 +80,9 @@ void GenObstacleMap(VISION_DATA &cdata)
 class KINECT2::KINECT2_STRUCT
 {
     friend class KINECT2;
+public:
+    KINECT2_STRUCT();
+    ~KINECT2_STRUCT();
 private:
     std::string  serial;
     int frameNum = 0;
@@ -99,6 +102,16 @@ private:
 };
 
 KINECT2::KINECT2():mKinect2Struct(new KINECT2::KINECT2_STRUCT)
+{
+    ;
+}
+
+KINECT2::KINECT2_STRUCT::KINECT2_STRUCT():mPointCloud(new Cloud(512, 424))
+{
+    ;
+}
+
+KINECT2::KINECT2_STRUCT::~KINECT2_STRUCT()
 {
     ;
 }
@@ -127,6 +140,7 @@ void KINECT2::SaveMap()
     out<<mKinect2Struct->frameNum;
     std::string filename = "GridMap" + out.str() + ".txt";
     std::ofstream Gridmapfile(filename);
+
     if (Gridmapfile.is_open())
     {
         for(int i = 0; i < 400; i++)
@@ -328,6 +342,7 @@ void KINECT2::Update()
 
     mKinect2Struct->listener->release(mKinect2Struct->frames);
 }
+
 void KINECT2::KINECT2_STRUCT::Initialize()
 {
     if(freenect2.enumerateDevices() == 0)
@@ -340,8 +355,6 @@ void KINECT2::KINECT2_STRUCT::Initialize()
        serial = freenect2.getDefaultDeviceSerialNumber();
     }
 
-    mPointCloud->width = 512;
-    mPointCloud->height = 424;
     memset(nowGridMap, 0, 400 * 400 * sizeof(float));
     memset(lastGridMap, 0, 400 * 400 * sizeof(float));
 
