@@ -116,7 +116,7 @@ link_directories(${ALL_LINK_DIR})
 set(SOURCE_FILES main.cpp)
 PREPEND(FULL_SRC Server ${SOURCE_FILES})
 
-set(VISION_SOURCE_FILES Kinect2.cpp Vision_Gait0.cpp)
+set(VISION_SOURCE_FILES Kinect2.cpp Kinect2Test.cpp Vision_Gait0.cpp)
 PREPEND(VISION_FULL_SRC Kinect2 ${VISION_SOURCE_FILES})
 
 add_executable(Server ${VISION_FULL_SRC} ${FULL_SRC})

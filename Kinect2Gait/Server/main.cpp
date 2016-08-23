@@ -14,6 +14,7 @@ using namespace std;
 #include <Robot_Type_I.h>
 #include "Vision_Gait0.h"
 #include "Kinect2.h"
+#include "Kinect2Test.h"
 
 #include "rtdk.h"
 #include "unistd.h"
@@ -29,6 +30,8 @@ double feetPosi[18] =
   0.3,   -0.9,  0.65 };
 
 Kinect2Sensor::KINECT2 kinect2;
+
+// Kinect2TestSensor::KINECT2TEST kinect2;
 
 atomic_bool isTerrainCaliRecorded(false);
 
@@ -300,6 +303,7 @@ auto visionWalkParse(const std::string &cmd, const std::map<std::string, std::st
     robPose[0][5] = 1;
     robPose[0][10] = 1;
     robPose[0][11] = 0.2;
+    robPose[0][15] = 1;
 
     visionWalkParam[1].movetype = turn;
     visionWalkParam[1].turndata = -30;
@@ -310,6 +314,7 @@ auto visionWalkParse(const std::string &cmd, const std::map<std::string, std::st
     robPose[1][2] = sin(M_PI * (-15) / 180.0);
     robPose[1][8] = -sin(M_PI * (-15) / 180.0);
     robPose[1][10] = cos(M_PI * (-15) / 180.0);
+    robPose[1][15] = 1;
 
     visionWalkParam[2].movetype = flatmove;
     double avoidMove1[3] = {0, 0, 0.4};
@@ -320,6 +325,7 @@ auto visionWalkParse(const std::string &cmd, const std::map<std::string, std::st
     robPose[2][5] = 1;
     robPose[2][10] = 1;
     robPose[2][11] = 0.2;
+    robPose[2][15] = 1;
 
     visionWalkParam[3].movetype = turn;
     visionWalkParam[3].turndata = 60;
@@ -330,6 +336,7 @@ auto visionWalkParse(const std::string &cmd, const std::map<std::string, std::st
     robPose[3][2] = sin(M_PI * (30) / 180.0);
     robPose[3][8] = -sin(M_PI * (30) / 180.0);
     robPose[3][10] = cos(M_PI * (30) / 180.0);
+    robPose[3][15] = 1;
 
     visionWalkParam[4].movetype = flatmove;
     double avoidMove2[3] = {0, 0, 0.4};
@@ -340,7 +347,7 @@ auto visionWalkParse(const std::string &cmd, const std::map<std::string, std::st
     robPose[4][5] = 1;
     robPose[4][10] = 1;
     robPose[4][11] = 0.2;
-
+    robPose[4][15] = 1;
 
     visionWalkParam[5].movetype = turn;
     visionWalkParam[5].turndata = -30;
@@ -351,6 +358,7 @@ auto visionWalkParse(const std::string &cmd, const std::map<std::string, std::st
     robPose[5][2] = sin(M_PI * (-15) / 180.0);
     robPose[5][8] = -sin(M_PI * (-15) / 180.0);
     robPose[5][10] = cos(M_PI * (-15) / 180.0);
+    robPose[5][15] = 1;
 
     visionWalkParam[6].movetype = flatmove;
     double avoidMove3[3] = {0, 0, 0.4};
@@ -361,6 +369,7 @@ auto visionWalkParse(const std::string &cmd, const std::map<std::string, std::st
     robPose[6][5] = 1;
     robPose[6][10] = 1;
     robPose[6][11] = 0.2;
+    robPose[6][15] = 1;
 
     aris::server::GaitParamBase param;
     msg_out.copyStruct(param);

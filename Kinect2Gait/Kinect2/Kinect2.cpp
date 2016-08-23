@@ -15,7 +15,7 @@ typedef typename Cloud::Ptr CloudPtr;
 
 void GenPointCoud(const CloudPtr &rawCloud, CloudPtr &adjCloud)
 {
-//    cout<<"Point: "<<rawCloud->points.front().x<<" "<<rawCloud->points.front().y<<" "<< rawCloud->points.front().z<<endl;
+    //    cout<<"Point: "<<rawCloud->points.front().x<<" "<<rawCloud->points.front().y<<" "<< rawCloud->points.front().z<<endl;
 
     Eigen::Matrix4f matrixSTS;
     matrixSTS << -1, 0, 0, 0,
@@ -152,11 +152,16 @@ void KINECT2::SaveMap()
             Gridmapfile<<std::endl;
         }
     }
+    mKinect2Struct->frameNum++;
 }
 
-void KINECT2::GetPose(const float nowPose[16])
+void KINECT2::GetPose(const float * nowPose)
 {
-    memcpy(mKinect2Struct->robPose, nowPose, sizeof(nowPose));
+    memcpy(mKinect2Struct->robPose, nowPose, 16 * sizeof(float));
+    cout<<mKinect2Struct->robPose[0]<<" "<<mKinect2Struct->robPose[1]<<" "<<mKinect2Struct->robPose[2]<<" "<<mKinect2Struct->robPose[3]<<endl
+                                      <<mKinect2Struct->robPose[4]<<" "<<mKinect2Struct->robPose[5]<<" "<<mKinect2Struct->robPose[6]<<" "<<mKinect2Struct->robPose[7]<<endl
+                                        <<mKinect2Struct->robPose[8]<<" "<<mKinect2Struct->robPose[9]<<" "<<mKinect2Struct->robPose[10]<<" "<<mKinect2Struct->robPose[11]<<endl
+                                          <<mKinect2Struct->robPose[12]<<" "<<mKinect2Struct->robPose[13]<<" "<<mKinect2Struct->robPose[14]<<" "<<mKinect2Struct->robPose[15]<<endl;
 }
 
 void KINECT2::InitMap()
@@ -240,32 +245,32 @@ void KINECT2::UpdateConMap()
     {
         for(int j = 0; j < 400; j++)
         {
-             if(mKinect2Struct->lastGridMap[i][j] != 0)
-             {
-                 float tempPoint[3];
-                 tempPoint[0] = (j - 200) * 0.01 - 0.005;
-                 tempPoint[1] = mKinect2Struct->lastGridMap[i][j];
-                 tempPoint[2] = (i - 200) * 0.01 - 0.005;
+            if(mKinect2Struct->lastGridMap[i][j] != 0)
+            {
+                float tempPoint[3];
+                tempPoint[0] = 0.01 * (j + 1 - 200) - 0.005;
+                tempPoint[1] = mKinect2Struct->lastGridMap[i][j];
+                tempPoint[2] = 0.01 * (i + 1 - 200) - 0.005;
 
-                 float tempTransPoint[3];
-                 tempTransPoint[0] = invPosMatrix(0, 0) * tempPoint[0] + invPosMatrix(0, 1) * tempPoint[1] + invPosMatrix(0, 2) * tempPoint[2] + invPosMatrix(0, 3);
-                 tempTransPoint[1] = invPosMatrix(1, 0) * tempPoint[0] + invPosMatrix(1, 1) * tempPoint[1] + invPosMatrix(1, 2) * tempPoint[2] + invPosMatrix(1, 3);
-                 tempTransPoint[2] = invPosMatrix(2, 0) * tempPoint[0] + invPosMatrix(2, 1) * tempPoint[1] + invPosMatrix(2, 2) * tempPoint[2] + invPosMatrix(2, 3);
+                float tempTransPoint[3];
+                tempTransPoint[0] = invPosMatrix(0, 0) * tempPoint[0] + invPosMatrix(0, 1) * tempPoint[1] + invPosMatrix(0, 2) * tempPoint[2] + invPosMatrix(0, 3);
+                tempTransPoint[1] = invPosMatrix(1, 0) * tempPoint[0] + invPosMatrix(1, 1) * tempPoint[1] + invPosMatrix(1, 2) * tempPoint[2] + invPosMatrix(1, 3);
+                tempTransPoint[2] = invPosMatrix(2, 0) * tempPoint[0] + invPosMatrix(2, 1) * tempPoint[1] + invPosMatrix(2, 2) * tempPoint[2] + invPosMatrix(2, 3);
 
-                 if(tempTransPoint[0] > -2 && tempTransPoint[0] < 2 &&
-                         tempTransPoint[2] > -2 && tempTransPoint[2] < 2)
-                 {
-                     int m = 0, n = 0;
-                     n = floor(tempTransPoint[0] / 0.01) + 200;
-                     m = floor(tempTransPoint[2] / 0.01) + 200;
+                if(tempTransPoint[0] > -2 && tempTransPoint[0] < 2 &&
+                        tempTransPoint[2] > -2 && tempTransPoint[2] < 2)
+                {
+                    int m = 0, n = 0;
+                    n = floor(tempTransPoint[0] / 0.01) + 200;
+                    m = floor(tempTransPoint[2] / 0.01) + 200;
 
-                     //Mean
-                     mKinect2Struct->nowGridMap[m][n] = (mKinect2Struct->nowGridMap[m][n] * cGridNum[m][n] + tempTransPoint[1]) / (cGridNum[m][n] + 1);
+                    //Mean
+                    mKinect2Struct->nowGridMap[m][n] = (mKinect2Struct->nowGridMap[m][n] * cGridNum[m][n] + tempTransPoint[1]) / (cGridNum[m][n] + 1);
 
-                     cGridNum[m][n] = cGridNum[m][n] + 1;
-                 }
+                    cGridNum[m][n] = cGridNum[m][n] + 1;
+                }
 
-             }
+            }
         }
     }
 
@@ -352,7 +357,7 @@ void KINECT2::KINECT2_STRUCT::Initialize()
     }
     else
     {
-       serial = freenect2.getDefaultDeviceSerialNumber();
+        serial = freenect2.getDefaultDeviceSerialNumber();
     }
 
     memset(nowGridMap, 0, 400 * 400 * sizeof(float));

@@ -25,17 +25,11 @@ public:
     ~KINECT2();
 
     void Start();
-    void InitMap();
-    void UpdateConMap();
-    void InitMapTest();
-    void UpdateConMapTest();
+    void Update();
     void SavePcd();
     void Stop();
-    void GetPose(const float * nowPose);
-    void SaveMap();
     VISION_DATA visData;
 private:
-   void Update();
    class KINECT2_STRUCT;
    std::auto_ptr<KINECT2_STRUCT> mKinect2Struct;
 };

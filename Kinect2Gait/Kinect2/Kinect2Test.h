@@ -1,5 +1,5 @@
-#ifndef KINECT2_H
-#define KINECT2_H
+#ifndef KINECT2TEST_H
+#define KINECT2TEST_H
 
 #include <stdlib.h>
 #include <memory>
@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace Kinect2Sensor
+namespace Kinect2TestSensor
 {
 
 struct VISION_DATA
@@ -18,11 +18,11 @@ struct VISION_DATA
     int obstacleMap[400][400];
 };
 
-class KINECT2
+class KINECT2TEST
 {
 public:
-    KINECT2();
-    ~KINECT2();
+    KINECT2TEST();
+    ~KINECT2TEST();
 
     void Start();
     void InitMap();
@@ -31,15 +31,15 @@ public:
     void UpdateConMapTest();
     void SavePcd();
     void Stop();
-    void GetPose(const float * nowPose);
+    void GetPose(const float *);
     void SaveMap();
     VISION_DATA visData;
 private:
    void Update();
-   class KINECT2_STRUCT;
-   std::auto_ptr<KINECT2_STRUCT> mKinect2Struct;
+   class KINECT2TEST_STRUCT;
+   std::auto_ptr<KINECT2TEST_STRUCT> mKinect2TestStruct;
 };
 
 }
 
-#endif // KINECT2_H
+#endif // KINECT2TEST_H
