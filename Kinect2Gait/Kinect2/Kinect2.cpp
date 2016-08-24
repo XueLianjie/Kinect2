@@ -35,7 +35,7 @@ void GenPointCoud(const CloudPtr &rawCloud, CloudPtr &adjCloud)
 //    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor(true);
 //    sor.setInputCloud(newcloud);
 //    cout<<"223"<<endl;
-//    sor.setMeanK(1000);
+//    sor.setMeanK(10);
 //    sor.setStddevMulThresh(1.0);
 //    cout<<"224"<<endl;
 //    sor.filter(*newcloud1);
