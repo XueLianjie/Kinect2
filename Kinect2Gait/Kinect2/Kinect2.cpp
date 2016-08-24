@@ -23,13 +23,9 @@ void GenPointCoud(const CloudPtr &rawCloud, CloudPtr &adjCloud)
     adjCloud->clear();
     //    cout<<"Point: "<<rawCloud->points.front().x<<" "<<rawCloud->points.front().y<<" "<< rawCloud->points.front().z<<endl;
 
-    cout<<"111"<<endl;
-
     std::vector<int> mapping;
     CloudPtr newcloud(new Cloud);
     pcl::removeNaNFromPointCloud(*rawCloud, *newcloud, mapping);
-
-    cout<<"222"<<endl;
 
 //    CloudPtr newcloud1(new Cloud);
 //    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor(true);
@@ -55,7 +51,7 @@ void GenPointCoud(const CloudPtr &rawCloud, CloudPtr &adjCloud)
             0, 0, 0, 1;
 
     Eigen::Matrix4f matrixRTG;
-    matrixRTG <<  1, 0, 0, 0,
+    matrixRTG <<  -1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1;
@@ -67,15 +63,11 @@ void GenPointCoud(const CloudPtr &rawCloud, CloudPtr &adjCloud)
     CloudPtr newcloud2(new Cloud);
     pcl::transformPointCloud(*newcloud, *newcloud2, matrixSTG);
 
-    cout<<"444"<<endl;
-
     pcl::PassThrough<pcl::PointXYZ> pass;
     pass.setInputCloud (newcloud2);
     pass.setFilterFieldName ("z");
     pass.setFilterLimits (0.0, 2.0);
     pass.filter (*adjCloud);
-
-    cout<<"555"<<endl;
 }
 
 void GenGridMap(const CloudPtr &adjCloud, VISION_DATA &cdata)
@@ -123,7 +115,6 @@ private:
     std::string  serial;
     int frameNum = 0;
     CloudPtr mPointCloud;
-    // CloudPtr lastPointCloud;
     float lastGridMap[400][400];
     float nowGridMap[400][400];
     float robPose[16] = {0};
@@ -143,7 +134,7 @@ KINECT2::KINECT2():mKinect2Struct(new KINECT2::KINECT2_STRUCT)
     ;
 }
 
-KINECT2::KINECT2_STRUCT::KINECT2_STRUCT():mPointCloud(new Cloud)//, lastPointCloud(new Cloud(512, 424))
+KINECT2::KINECT2_STRUCT::KINECT2_STRUCT():mPointCloud(new Cloud)
 {
     ;
 }
@@ -239,8 +230,6 @@ void KINECT2::InitMap()
 
     memcpy(mKinect2Struct->lastGridMap, mKinect2Struct->nowGridMap, 400 * 400 * sizeof(float));
 
-    // *mKinect2Struct->lastPointCloud = *mKinect2Struct->mPointCloud;
-
     memcpy(visData.gridMap, mKinect2Struct->nowGridMap, 400 * 400 * sizeof(float));
 }
 
@@ -275,25 +264,6 @@ void KINECT2::UpdateConMap()
             mKinect2Struct->robPose[12], mKinect2Struct->robPose[13], mKinect2Struct->robPose[14], mKinect2Struct->robPose[15];
 
     Eigen::Matrix4f invPosMatrix = posMatrix.inverse();
-
-    //    CloudPtr mLastPointCloud;
-    //    pcl::transformPointCloud(*mKinect2Struct->lastPointCloud, *mLastPointCloud, invPosMatrix);
-
-    //    for (size_t i = 0; i < mLastPointCloud->points.size(); ++i)
-    //    {
-    //        if(mLastPointCloud->points[i].x > -2 && mLastPointCloud->points[i].x < 2 &&
-    //                mLastPointCloud->points[i].z > -2 && mLastPointCloud->points[i].z < 2)
-    //        {
-    //            int m = 0, n = 0;
-    //            n = floor(mLastPointCloud->points[i].x / 0.01) + 200;
-    //            m = floor(mLastPointCloud->points[i].z / 0.01) + 200;
-
-    //            //Mean
-    //            mKinect2Struct->nowGridMap[m][n] = (mKinect2Struct->nowGridMap[m][n] * cGridNum[m][n] + mLastPointCloud->points[i].y) / (cGridNum[m][n] + 1);
-
-    //            cGridNum[m][n] = cGridNum[m][n] + 1;
-    //        }
-    //    }
 
     for(int i = 0; i < 400; i++)
     {
@@ -334,8 +304,6 @@ void KINECT2::UpdateConMap()
     }
 
     memcpy(mKinect2Struct->lastGridMap, mKinect2Struct->nowGridMap, 400 * 400 * sizeof(float));
-
-    //  *mKinect2Struct->lastPointCloud = *mKinect2Struct->mPointCloud;
 
     memcpy(visData.gridMap, mKinect2Struct->nowGridMap, 400 * 400 * sizeof(float));
 }

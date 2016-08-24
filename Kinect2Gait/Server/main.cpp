@@ -14,7 +14,6 @@ using namespace std;
 #include <Robot_Type_I.h>
 #include "Vision_Gait0.h"
 #include "Kinect2.h"
-#include "Kinect2Test.h"
 
 #include "rtdk.h"
 #include "unistd.h"
@@ -30,8 +29,6 @@ double feetPosi[18] =
   0.3,   -0.9,  0.65 };
 
 Kinect2Sensor::KINECT2 kinect2;
-
-// Kinect2TestSensor::KINECT2TEST kinect2;
 
 atomic_bool isTerrainCaliRecorded(false);
 
