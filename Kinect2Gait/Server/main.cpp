@@ -12,8 +12,10 @@ using namespace std;
 #include <Robot_Gait.h>
 #include <Robot_Base.h>
 #include <Robot_Type_I.h>
-#include "Vision_Gait0.h"
-#include "Kinect2.h"
+#include "Vision_Gait.h"
+#include "VisionSensor.h"
+#include "PassStepDitch.h"
+#include "VisionWalk.h"
 
 #include "rtdk.h"
 #include "unistd.h"
@@ -27,8 +29,6 @@ double feetPosi[18] =
   0.3,  -0.9, -0.65,
   0.45, -0.9,  0,
   0.3,   -0.9,  0.65 };
-
-Kinect2Sensor::KINECT2 kinect2;
 
 atomic_bool isTerrainCaliRecorded(false);
 
@@ -431,10 +431,14 @@ auto stopVisionWalkParse(const std::string &cmd, const std::map<std::string, std
 }
 
 int main(int argc, char *argv[])
-{
+{   
     kinect2.Start();
 
+    PassStepDitch::adjustWrapper.AdjustStart();
+
     std::string xml_address;
+
+    VisionWalk::visionWalkWrapper.VisionStart();
 
     if (argc <= 1)
     {
@@ -470,7 +474,11 @@ int main(int argc, char *argv[])
     rs.addCmd("ca", visionCalibrateParse, visionCalibrate);
     rs.addCmd("vwk", visionWalkParse, visionWalk);
     rs.addCmd("swk", stopVisionWalkParse, visionWalk);
+    rs.addCmd("sdwk", PassStepDitch::adjustWrapper.PassStepDitchParse, PassStepDitch::adjustWrapper.PassStepDitchGait);
+    rs.addCmd("ssdwk", PassStepDitch::adjustWrapper.StopPassStepDitchParse, PassStepDitch::adjustWrapper.PassStepDitchGait);
 
+    rs.addCmd("nvwk", VisionWalk::visionWalkWrapper.ParsevisionWalk, VisionWalk::visionWalkWrapper.visionWalk);
+    rs.addCmd("snvwk", VisionWalk::visionWalkWrapper.StopvisionWalk, VisionWalk::visionWalkWrapper.visionWalk);
     rs.open();
 
     rs.setOnExit([&]()

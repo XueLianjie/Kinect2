@@ -534,8 +534,20 @@
             </wk>
             <vwk/>
             <swk/>
+            <sdwk/>
+            <ssdwk/>
+            <up default="up_param">
+                <up_param type="group">
+                    <init abbreviation="i"/>
+                    <go abbreviation="g"/>
+                    <distance abbreviation="d" type="double" default="0.175"/>
+                    <height abbreviation="h" type="double" default="0.2"/>
+                </up_param>
+            </up>
             <ca/>
             <ro/>
+            <nvwk/>
+            <snvwk>
         </Commands>
     </Server>
     <Controller>

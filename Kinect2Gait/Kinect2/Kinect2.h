@@ -27,8 +27,6 @@ public:
     void Start();
     void InitMap();
     void UpdateConMap();
-    void InitMapTest();
-    void UpdateConMapTest();
     void SavePcd();
     void Stop();
     void GetPose(const float * nowPose);
