@@ -57,7 +57,7 @@ void PassStepDitchWrapper::AdjustStart()
                 else
                 {
                     visionWalkParam.movetype = stopmove;
-
+                    cout<<terrainAnalysisResult.terrain.terrainData[0]<<" "<<terrainAnalysisResult.terrain.terrainData[1]<<endl;
                 }
             }
             else
@@ -72,7 +72,7 @@ void PassStepDitchWrapper::AdjustStart()
                 memcpy(visionWalkParam.movedata,move_data,sizeof(move_data));
             }
             isTerrainAnalysisFinished = true;
-            cout<<"terrrainended"<<endl;
+            cout<<"terrrain ended"<<endl;
         }
     });
 }

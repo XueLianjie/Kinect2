@@ -21,6 +21,7 @@ typedef typename Cloud::Ptr CloudPtr;
 void GenPointCoud(const CloudPtr &rawCloud, CloudPtr &adjCloud)
 {
     adjCloud->clear();
+
     //    cout<<"Point: "<<rawCloud->points.front().x<<" "<<rawCloud->points.front().y<<" "<< rawCloud->points.front().z<<endl;
 
     std::vector<int> mapping;
@@ -372,7 +373,6 @@ void KINECT2::Update()
         }
     }
 
-    cout<<"aaa"<<endl;
     cloud->is_dense = false;
     GenPointCoud(cloud, mKinect2Struct->mPointCloud);
 
