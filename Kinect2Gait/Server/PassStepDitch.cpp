@@ -57,7 +57,8 @@ void PassStepDitchWrapper::AdjustStart()
                 else
                 {
                     visionWalkParam.movetype = stopmove;
-                    cout<<terrainAnalysisResult.terrain.terrainData[0]<<" "<<terrainAnalysisResult.terrain.terrainData[1]<<endl;
+                    cout<<terrainAnalysisResult.terrain.terrainData[0]<<" "<<terrainAnalysisResult.terrain.terrainData[1]
+                                                                     <<" "<<terrainAnalysisResult.terrain.terrainData[2]<<endl;
                 }
             }
             else

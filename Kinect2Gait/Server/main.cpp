@@ -16,6 +16,7 @@ using namespace std;
 #include "VisionSensor.h"
 #include "PassStepDitch.h"
 #include "VisionWalk.h"
+#include "UpOneSep.h"
 
 #include "rtdk.h"
 #include "unistd.h"
@@ -479,6 +480,7 @@ int main(int argc, char *argv[])
 
     rs.addCmd("nvwk", VisionWalk::visionWalkWrapper.ParsevisionWalk, VisionWalk::visionWalkWrapper.visionWalk);
     rs.addCmd("snvwk", VisionWalk::visionWalkWrapper.StopvisionWalk, VisionWalk::visionWalkWrapper.visionWalk);
+    rs.addCmd("ups", ParseUpOnestep, UpOneStepGait);
     rs.open();
 
     rs.setOnExit([&]()

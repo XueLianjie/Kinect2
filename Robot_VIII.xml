@@ -544,6 +544,13 @@
                     <height abbreviation="h" type="double" default="0.2"/>
                 </up_param>
             </up>
+            <ups default="ups_param">
+                 <ups_param type="group">
+                     <stepHeight abbreviation="sh" type="double" default="0.25"/>
+                     <bodyHeight abbreviation="bh" type="double" default="0.2"/>
+                     <normalHeight abbreviation="nh" type="double" default="0.05"/>
+                 </ups_param>
+            </ups>
             <ca/>
             <ro/>
             <nvwk/>

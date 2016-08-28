@@ -113,7 +113,7 @@ include_directories(${ALL_INCL_DIR})
 link_directories(${ALL_LINK_DIR})
 
 ################################### build server ####################################
-set(SOURCE_FILES main.cpp PassStepDitch.cpp VisionWalk.cpp)
+set(SOURCE_FILES main.cpp PassStepDitch.cpp VisionWalk.cpp UpOneStep.cpp)
 PREPEND(FULL_SRC Server ${SOURCE_FILES})
 
 set(VISION_SOURCE_FILES Kinect2.cpp Vision_Gait.cpp VisionSensor.cpp Vision_Gait.cpp Vision_Terrain.cpp Vision_Gait0.cpp Vision_Control0.cpp Vision_Terrain0.cpp)
